@@ -1,0 +1,14 @@
+langEnv/
+.env/
+
+.cache/
+models/
+models--sentence-transformers--all-MiniLM-L6-v2/
+*.ckpt
+*.pt
+
+.DS_Store
+
+.env
+
+.vscode/
