@@ -15,6 +15,7 @@ from dotenv import load_dotenv
 load_dotenv()
 
 model = ChatGoogleGenerativeAI(model='gemini-1.5-pro')
+# other param need to be checked, eg : temperature(if it is 0 then o/p always same for same i/p, if more than 0 depending on the value o/p will vary every time we invoke)
 
 result = model.invoke('what is langchain')
 
