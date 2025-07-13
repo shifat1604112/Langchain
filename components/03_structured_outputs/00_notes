@@ -1,0 +1,20 @@
+why do we need strcutured outputs?
+> Data extractions
+> API building
+> Agents
+
+Case1 :
+LLM that support structured output, we get them by using "with_structure_output" function
+We can use pydantic, json_schema for this
+
+
+LLM that dont support structured output, we get structured output by using "output parser"
+
+
+### with_structured_output() a ekta parameter ache jetar name method, shekhane duiat method thake 1. json_mode 2.function calling
+### agent bananor time , jokhn o/p pawar por onno kaj krte hbe then we can use mode "function calling" which is by default mode
+### json mode a o/p json akare ashe, openai chara onno model gulate json mode use krte pari, openai er jonno function calling mode use krte pari
+
+
+
+# jeshob model with_structured_output() support korena eder jonno we use output parser :
