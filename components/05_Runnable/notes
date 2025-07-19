@@ -1,0 +1,85 @@
+Chain er concept hocche mainly ektar o/p onnotar i/p hishebe use kora, but chain er problem hcche prompt, model eder invokation alada
+alada method,  as example : 
+prompt = PromptTemplate.from_template("Tell me a joke about {topic}.")
+llm = OpenAI(temperature=0.7)
+joke_chain = LLMChain(llm=llm, prompt=prompt)
+response = joke_chain.run("cats")
+
+ekhane llmchain k invoke krsi .run diye, evabe documentation a diff type er kaj er jonno diff type chain ase jemon sequentialChain and others : https://python.langchain.com/api_reference/langchain/chains.html
+but eto gula alada chain er reason hoilo prompt k invoke kora lage ek method, llm k invoke kora lage onno method, evabe loader ba onno kichu invoke onno methods,
+unification nai, jei karone vinno kaje vonno chain banano lagse
+
+
+BUT
+
+runnable eshe shbaoike same interface dise, jai call kori shobar invokation method .invoke(), so ekta jinih er sathe onno ta easilty connect korte pari
+like the leggo block.
+
+
+SO :
+What is a Chain?
+-> Old LangChain way to link steps like Prompt → LLM → Output.
+-> Example: LLMChain, SimpleSequentialChain.
+-> Not composable — hard to extend with extra steps (e.g. post-processing).
+-> Uses different methods like .run(), .predict() etc.
+
+
+What is a Runnable?
+-> New LangChain standard: Everything (prompts, models, functions) becomes a Runnable.
+-> Unified API: .invoke(), .stream(), .batch()
+-> Composable: Use | operator to chain steps
+-> Powerful features: fallback, retry, logging, streaming, async
+-> Post-processing becomes part of the pipeline
+
+A Runnable is a unit of work that can be run, chained, or composed in LangChain.
+Think of it like a block in a pipeline — it takes input, does something, and gives output.
+Runnable is like LEGO blocks  — all steps can be composed using | (pipe operator), just like Unix pipes.
+
+
+
+**** Ager chain a j concept dekhsi chain er | diye eta actually runnable interface use krsi
+
+
+
+RUNNABLE EXAMPLE CODE:
+
+prompt = PromptTemplate(
+    template='Generate 5 interesting facts about {topic}',
+    input_variables=['topic']
+)
+
+model = ChatGoogleGenerativeAI(model='gemini-1.5-pro')
+parser = StrOutputParser()
+
+chain = prompt | model | parser
+
+result = chain.invoke({'topic': 'cricket'})
+print(result)
+
+
+
+OLDER CHAIN CONCEPT CODE WITHOUT USING RUNNABLE:
+
+prompt = PromptTemplate(
+    input_variables=["topic"],
+    template="Generate 5 interesting facts about {topic}"
+)
+
+# Step 2: LLM (same model)
+llm = ChatGoogleGenerativeAI(model='gemini-1.5-pro')
+
+# Step 3: LLMChain
+chain = LLMChain(llm=llm, prompt=prompt) -> jodi llm chara onno kaj kori , tokhn kaj onujayi alada chain use krte hbe, jemon doc load kore  kichu krte alda chain lagbe
+
+# Step 4: Call with input
+response = chain.run("cricket")  # input is a string, not dict here
+
+print(response.content)
+
+
+*********
+We can divide runnable into two parts:
+1) Task Specific Runnables :  This are the core langchain componnets that have been "converted into Runnables so they can be used in pipelines". eg: PromptTemplate, ChatOpenAI,StrOutputParser, Retriver etc.
+
+2) Runnable Primitives : These are fundamental building blocks for structuring execution logic in AI workflow. They help orchestrate execution by defining Runnables interact(sequentially,parallely,conditionaly)
+eg :RunnableSequence, RunnableBranch,RunnableLambda etc
